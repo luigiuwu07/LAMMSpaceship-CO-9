@@ -1,11 +1,12 @@
 import pygame
 from game.components.bullets.bullet import Bullet
-from game.utils.constants import ENEMY_TYPE
+from game.utils.constants import ENEMY_TYPE, SPACESHIP_TYPE
 
 
 class BulletManager:
     def __init__(self):
         self.enemy_bullets = []
+        self.spaceship_bullets = []
 
     def update(self, game):
         for enemy_bullet in self.enemy_bullets:
@@ -19,6 +20,8 @@ class BulletManager:
     def draw(self, screen):
         for enemy_bullet in self.enemy_bullets:
             enemy_bullet.draw(screen)
+        for spaceship_bullet in self.spaceship_bullets:
+            spaceship_bullet.draw(screen)
 
     def add_bullet(self, spaceship):
         if spaceship.type == ENEMY_TYPE and not self.enemy_bullets:
