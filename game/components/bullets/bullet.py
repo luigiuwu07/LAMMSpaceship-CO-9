@@ -1,12 +1,12 @@
 import pygame
 from pygame.sprite import Sprite
 
-from game.utils.constants import BULLET, BULLET_ENEMY, ENEMY_TYPE,SPACESHIP_TYPE , SCREEN_HEIGHT
+from game.utils.constants import BULLET, BULLET_ENEMY, ENEMY_TYPE, SCREEN_HEIGHT, SPACESHIP_TYPE
 
 class Bullet:
     SPEED = 20
     BULLETS = {ENEMY_TYPE: BULLET_ENEMY,
-               SPACESHIP_TYPE: BULLET}
+               SPACESHIP_TYPE: BULLET }
 
     def __init__(self, spaceship):
         self.owner = spaceship.type
@@ -17,12 +17,14 @@ class Bullet:
     def update(self, bullets):
         if self.owner == ENEMY_TYPE:
             self.rect.y += self.SPEED
-            if self.rect.y >= SCREEN_HEIGHT:
-                bullets.remove(self)
-        if self.owner == SPACESHIP_TYPE:
+        else:
             self.rect.y -= self.SPEED
-            if self.rect.y >= 0:
+            
+        if self.rect.y >= SCREEN_HEIGHT or self.rect.y <= 0:
                 bullets.remove(self)
 
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        if self.owner == ENEMY_TYPE:
+            screen.blit(self.image, self.rect)
+        if self.owner == SPACESHIP_TYPE:
+            screen.blit(self.image, self.rect)
