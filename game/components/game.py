@@ -8,7 +8,7 @@ from game.components.menu import Menu
 from game.components.power_ups.power_up_manager import PowerUpManager
 from game.components.spaceship import Spaceship
 
-from game.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SPACESHIP, TITLE, FPS, DEFAULT_TYPE
 
 
 class Game:
@@ -23,6 +23,10 @@ class Game:
         self.game_speed = 10
         self.x_pos_bg = 0
         self.y_pos_bg = 0
+
+        self.shield_status = 0
+        self.super_shoots = 0
+
         self.player = Spaceship()
         self.enemy_manager = EnemyManager()
         self.bullet_manager = BulletManager()
@@ -32,6 +36,10 @@ class Game:
         self.max_score = 0
         self.death_count = 0
         self.game_over_menu = GameOverMenu("Game Over", self)
+        pygame.mixer.music.load('game/assets/Music/music.wav')
+        pygame.mixer.music.set_volume(0.1)
+
+        
 
     def run(self):
         # Game loop: events - update - draw
@@ -39,12 +47,14 @@ class Game:
         while self.running:
             if not self.playing:
                 self.show_menu()
+                self.player.image = pygame.transform.scale(SPACESHIP, (self.player.SPACESHIP_HEIGHT, self.player.SPACESHIP_WIDTH))
         pygame.display.quit()
         pygame.quit()
 
     def play(self):
         self.playing = True
         self.enemy_manager.reset()
+        pygame.mixer.music.play(-1)
         self.score = 0
         while self.playing:
             self.events()
@@ -111,4 +121,8 @@ class Game:
         self.running = False
 
     def reset(self):
+        self.bullet_manager.reset()
+        self.enemy_manager.reset()
         self.power_up_manager.reset()
+        self.score.reset()
+        self.player.reset()

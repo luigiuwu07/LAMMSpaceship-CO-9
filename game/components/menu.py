@@ -14,6 +14,13 @@ class Menu:
         self.update_message(message)
 
     def events(self, on_close, on_start):
+        mouse_pos = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if self.HALF_SCREEN_WIDTH - 20 < mouse_pos[0] < self.HALF_SCREEN_WIDTH + 20 and (self.HALF_SCREEN_HEIGHT + 110) < mouse_pos[1] < (self.HALF_SCREEN_HEIGHT + 150):
+            if click[0] == 1:
+                on_start()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 on_close()

@@ -2,10 +2,13 @@ import random
 import pygame
 
 from game.components.power_ups.shield import Shield
+from game.components.power_ups.bullet_power_up import BulletPowerUp
+from game.utils.constants import SUPER_SPACESHIP_TYPE
 
 
 class PowerUpManager:
     def __init__(self):
+        self.power_ups_available = [Shield(),BulletPowerUp()]
         self.power_ups = []
         self.when_appears = 0
 
@@ -13,7 +16,7 @@ class PowerUpManager:
         current_time = pygame.time.get_ticks()
         if not self.power_ups and current_time >= self.when_appears:
             self.when_appears += random.randint(10000, 15000)
-            self.power_ups.append(Shield())
+            self.power_ups.append(random.choice(self.power_ups_available))
 
     def update(self, game):
         self.generate_power_up()

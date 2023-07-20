@@ -1,16 +1,20 @@
 import pygame
 from pygame.sprite import Sprite
 
-from game.utils.constants import BULLET, BULLET_ENEMY, ENEMY_TYPE, SCREEN_HEIGHT, SPACESHIP_TYPE
+from game.utils.constants import BULLET, BULLET_ENEMY, ENEMY_TYPE, SCREEN_HEIGHT, SPACESHIP_TYPE, SUPER_BULLET, SUPER_SPACESHIP_TYPE
 
 class Bullet:
     SPEED = 20
     BULLETS = {ENEMY_TYPE: BULLET_ENEMY,
-               SPACESHIP_TYPE: BULLET }
+               SPACESHIP_TYPE: BULLET,
+               SUPER_SPACESHIP_TYPE: SUPER_BULLET}
 
     def __init__(self, spaceship):
         self.owner = spaceship.type
-        self.image = pygame.transform.scale(self.BULLETS[self.owner],(10,30))
+        if self.owner == SUPER_SPACESHIP_TYPE:
+            self.image = pygame.transform.scale(self.BULLETS[self.owner],(60,50))
+        else:
+            self.image = pygame.transform.scale(self.BULLETS[self.owner],(10,30))
         self.rect = self.image.get_rect()
         self.rect.center = spaceship.rect.center
 
@@ -27,4 +31,6 @@ class Bullet:
         if self.owner == ENEMY_TYPE:
             screen.blit(self.image, self.rect)
         if self.owner == SPACESHIP_TYPE:
+            screen.blit(self.image, self.rect)
+        if self.owner == SUPER_SPACESHIP_TYPE:
             screen.blit(self.image, self.rect)
