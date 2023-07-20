@@ -5,6 +5,7 @@ from game.components.enemies import enemy_manager
 from game.components.enemies.enemy_manager import EnemyManager
 from game.components.game_over_menu import GameOverMenu
 from game.components.menu import Menu
+from game.components.power_ups.power_up_manager import PowerUpManager
 from game.components.spaceship import Spaceship
 
 from game.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
@@ -25,6 +26,7 @@ class Game:
         self.player = Spaceship()
         self.enemy_manager = EnemyManager()
         self.bullet_manager = BulletManager()
+        self.power_up_manager = PowerUpManager()
         self.menu = Menu("Press ENTER to start.")
         self.score = 0
         self.max_score = 0
@@ -37,7 +39,6 @@ class Game:
         while self.running:
             if not self.playing:
                 self.show_menu()
-                #self.show_game_over()
         pygame.display.quit()
         pygame.quit()
 
@@ -60,14 +61,17 @@ class Game:
         self.player.update(user_input, self)
         self.enemy_manager.update(self)
         self.bullet_manager.update(self, self.enemy_manager.enemies)
+        self.power_up_manager.update(self)
 
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
         self.draw_background()
         self.player.draw(self.screen)
+        self.player.draw_power_up(self)
         self.enemy_manager.draw(self.screen)
         self.bullet_manager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         self.draw_score()
         pygame.display.update()
         pygame.display.flip()
@@ -105,13 +109,6 @@ class Game:
     def on_close(self):
         self.playing = False
         self.running = False
-"""
-    def show_game_over(self):
-        #if self.death_count > 0:
-        if self.score > self.max_score:
-            self.max_score = self.score
-        self.game_over_menu.draw(self.screen)
-        self.game_over_menu.update_death_count(f"Score: {self.death_count}")
-        self.game_over_menu.update_score(f"Score: {self.score}")
-        self.game_over_menu.update_max_score(f"Score: {self.max_score}")
-"""
+
+    def reset(self):
+        self.power_up_manager.reset()

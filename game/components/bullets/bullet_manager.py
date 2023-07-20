@@ -1,6 +1,6 @@
 import pygame
 from game.components.bullets.bullet import Bullet
-from game.utils.constants import ENEMY_TYPE, SPACESHIP_TYPE
+from game.utils.constants import ENEMY_TYPE, SHIELD_TYPE, SPACESHIP_TYPE
 
 
 class BulletManager:
@@ -13,11 +13,12 @@ class BulletManager:
             enemy_bullet.update(self.enemy_bullets)
             if enemy_bullet.rect.colliderect(game.player.rect):
                 self.enemy_bullets.remove(enemy_bullet)
-                game.playing = False
-                game.death_count += 1
-                print(game.death_count)
-                pygame.time.delay(1000)
-                break
+                if game.player.power_up_type != SHIELD_TYPE:
+                    game.playing = False
+                    game.death_count += 1
+                    print(game.death_count)
+                    pygame.time.delay(1000)
+                    break
         for spaceship_bullet in self.spaceship_bullets:
             spaceship_bullet.update(self.spaceship_bullets)
             for enemy in enemies:
